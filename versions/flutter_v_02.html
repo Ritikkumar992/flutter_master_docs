@@ -1,0 +1,713 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.wrap{padding:1rem 0 2rem}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.nav-btn{font-size:12px;padding:5px 12px;border-radius:99px;border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-secondary);transition:all .15s}
+.nav-btn.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.phase{display:none;animation:fadeIn .2s ease}
+.phase.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.phase-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.phase-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:99px;white-space:nowrap;margin-top:2px}
+.phase-info h2{font-size:16px;font-weight:500;margin-bottom:4px}
+.phase-info p{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.timeline-bar{display:flex;align-items:center;gap:8px;margin-top:8px}
+.tbar-track{flex:1;height:4px;background:var(--color-border-tertiary);border-radius:2px;overflow:hidden}
+.tbar-fill{height:100%;border-radius:2px}
+.tbar-label{font-size:11px;color:var(--color-text-tertiary);white-space:nowrap}
+.sections{display:flex;flex-direction:column;gap:12px}
+.section{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.section-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;background:var(--color-background-secondary)}
+.section-head:hover{background:var(--color-background-tertiary)}
+.section-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.section-title{font-size:13px;font-weight:500;flex:1}
+.section-meta{display:flex;align-items:center;gap:8px}
+.diff-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500}
+.time-badge{font-size:10px;color:var(--color-text-tertiary)}
+.chevron{font-size:10px;color:var(--color-text-tertiary);transition:transform .2s}
+.chevron.open{transform:rotate(90deg)}
+.section-body{display:none;padding:14px 16px;border-top:0.5px solid var(--color-border-tertiary)}
+.section-body.open{display:block}
+.topics-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.topic-item{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--color-text-secondary);padding:6px 8px;border-radius:6px;background:var(--color-background-secondary)}
+.topic-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.topic-item.know{opacity:0.5}
+.topic-item.know .topic-dot{background:#639922}
+.why-box{background:var(--color-background-info);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--color-text-info);margin-bottom:10px;line-height:1.6}
+.res-row{display:flex;flex-wrap:wrap;gap:6px}
+.res-chip{font-size:11px;padding:4px 9px;border-radius:6px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);cursor:pointer;text-decoration:none;display:inline-block}
+.res-chip:hover{background:var(--color-background-secondary)}
+.ask-btn{font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-info);margin-top:10px}
+.ask-btn:hover{background:var(--color-background-info)}
+.footer-nav{display:flex;gap:8px;margin-top:1.5rem;justify-content:space-between}
+.fnav-btn{font-size:12px;padding:7px 14px;border-radius:6px;border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;color:var(--color-text-secondary)}
+.fnav-btn:hover{background:var(--color-background-secondary)}
+.overall-bar{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:1.5rem}
+.ob-seg{height:6px;border-radius:3px}
+</style>
+
+<div class="wrap">
+
+<div class="overall-bar" id="overall-bar"></div>
+
+<div class="nav" id="nav"></div>
+
+<div id="phases"></div>
+
+</div>
+
+<script>
+const YOU = new Set(['async/await','Futures','Streams','null safety','fp_dart','Clean Architecture','MVVM','BLoC/Cubit','Provider','Riverpod','GetIt DI','Repository Pattern','SOLID Principles','REST APIs','Supabase','Firebase','Razorpay SDK','SQL Server','.NET Framework','CI/CD','Play Store','App Store','Git/GitHub','Kotlin','Coroutines']);
+
+const phases = [
+{
+  id:'p1', label:'Dart Language', color:'#7F77DD', bg:'#EEEDFE', textColor:'#3C3489',
+  weeks:'2–3 weeks', difficulty:'foundation', timeWeight:1,
+  desc:'The language that runs everything. Know it deeply — interviews test Dart concepts directly.',
+  sections:[
+    {
+      title:'Dart basics', dot:'#7F77DD', diff:'easy', time:'3 days',
+      why:'You know this — but solidify null safety edge cases and type system depth.',
+      topics:[
+        {t:'Variables & types',k:true},{t:'Null safety & late',k:true},{t:'Functions & lambdas',k:true},
+        {t:'Control flow',k:true},{t:'Classes & objects',k:true},{t:'Constructors (named, factory)',k:false},
+        {t:'Inheritance & mixins',k:false},{t:'Abstract classes & interfaces',k:false},
+        {t:'Extension methods',k:false},{t:'Enums (enhanced, Dart 3)',k:false},
+      ],
+      resources:[
+        {label:'dart.dev/language',url:'https://dart.dev/language'},
+        {label:'DartPad',url:'https://dartpad.dev'},
+      ]
+    },
+    {
+      title:'Dart type system & generics', dot:'#7F77DD', diff:'medium', time:'3 days',
+      why:'Generics appear in every BLoC, Repository, and UseCase you write. Understanding variance prevents bugs.',
+      topics:[
+        {t:'Generics basics',k:false},{t:'Covariance & contravariance',k:false},
+        {t:'Type inference',k:false},{t:'typedef',k:false},{t:'Dynamic vs Object vs var',k:false},
+        {t:'Pattern matching (Dart 3)',k:false},{t:'Sealed classes',k:false},{t:'Records',k:false},
+      ],
+      resources:[
+        {label:'Dart type system docs',url:'https://dart.dev/language/type-system'},
+        {label:'Sealed classes guide',url:'https://dart.dev/language/class-modifiers'},
+      ]
+    },
+    {
+      title:'Async & concurrency', dot:'#7F77DD', diff:'hard', time:'5 days',
+      why:'Every Flutter app is async. Misunderstanding Isolates = jank. This is asked in every senior interview.',
+      topics:[
+        {t:'Future & async/await',k:true},{t:'Stream & StreamController',k:true},
+        {t:'StreamTransformer',k:false},{t:'Completer',k:false},{t:'Isolates',k:false},
+        {t:'compute() helper',k:false},{t:'Isolate.spawn & ports',k:false},
+        {t:'Zone & runZonedGuarded',k:false},{t:'Error handling in async',k:false},
+      ],
+      resources:[
+        {label:'Dart concurrency',url:'https://dart.dev/language/concurrency'},
+        {label:'Isolates deep dive',url:'https://dart.dev/language/isolates'},
+        {label:'Flutter Mapp YouTube',url:'https://www.youtube.com/@FlutterMapp'},
+      ]
+    },
+    {
+      title:'Functional Dart & advanced', dot:'#7F77DD', diff:'hard', time:'4 days',
+      why:'fpdart, Either, Option — you already use these. Now understand the theory behind them.',
+      topics:[
+        {t:'Higher-order functions',k:true},{t:'fpdart / fp_dart',k:true},
+        {t:'Either & Option types',k:true},{t:'Closures & lexical scope',k:false},
+        {t:'Lazy evaluation',k:false},{t:'Monads (intuition)',k:false},
+        {t:'Callable classes',k:false},{t:'Operator overloading',k:false},
+      ],
+      resources:[
+        {label:'fpdart pub.dev',url:'https://pub.dev/packages/fpdart'},
+        {label:'Functional Dart (article)',url:'https://verygood.ventures/blog/functional-dart'},
+      ]
+    },
+  ]
+},
+{
+  id:'p2', label:'Flutter Core', color:'#1D9E75', bg:'#E1F5EE', textColor:'#085041',
+  weeks:'4–5 weeks', difficulty:'hard', timeWeight:2,
+  desc:'Most Flutter devs treat this as a black box. Understanding the engine = debugging anything, optimizing everything.',
+  sections:[
+    {
+      title:'Widget fundamentals', dot:'#1D9E75', diff:'medium', time:'5 days',
+      why:'Stateless vs Stateful is just the surface. Knowing when Flutter rebuilds = writing performant UIs.',
+      topics:[
+        {t:'StatelessWidget',k:true},{t:'StatefulWidget',k:true},{t:'Widget lifecycle',k:false},
+        {t:'BuildContext in depth',k:false},{t:'InheritedWidget',k:false},
+        {t:'Widget composition patterns',k:false},{t:'Const constructors',k:false},
+        {t:'Keys — ValueKey, GlobalKey, UniqueKey',k:false},{t:'When to use GlobalKey',k:false},
+      ],
+      resources:[
+        {label:'Flutter widget lifecycle',url:'https://docs.flutter.dev/ui/widgets-intro'},
+        {label:'Inside Flutter (must-read)',url:'https://docs.flutter.dev/resources/inside-flutter'},
+      ]
+    },
+    {
+      title:'Flutter rendering pipeline', dot:'#1D9E75', diff:'hard', time:'7 days',
+      why:'This is what separates mid-level from senior. Most Flutter devs never know this exists.',
+      topics:[
+        {t:'3 trees: Widget, Element, RenderObject',k:false},{t:'Element lifecycle',k:false},
+        {t:'RenderObject & layout',k:false},{t:'Constraints flow down, sizes flow up',k:false},
+        {t:'Hit testing',k:false},{t:'Compositing & layers',k:false},
+        {t:'RepaintBoundary',k:false},{t:'Frame lifecycle & vsync',k:false},
+        {t:'Impeller renderer (new)',k:false},
+      ],
+      resources:[
+        {label:'Flutter internals talk',url:'https://www.youtube.com/watch?v=996ZgFRENMs'},
+        {label:'RenderObject deep dive',url:'https://api.flutter.dev/flutter/rendering/RenderObject-class.html'},
+        {label:'Romans Jonevs YouTube',url:'https://www.youtube.com/@RomansJonevs'},
+      ]
+    },
+    {
+      title:'Layout system', dot:'#1D9E75', diff:'medium', time:'4 days',
+      why:'Every layout bug is a constraint misunderstanding. Learn this once, debug forever.',
+      topics:[
+        {t:'Row, Column, Stack',k:true},{t:'Flex & Expanded',k:true},
+        {t:'LayoutBuilder',k:false},{t:'CustomMultiChildLayout',k:false},
+        {t:'Slivers — SliverList, SliverAppBar',k:false},{t:'CustomScrollView',k:false},
+        {t:'SliverPersistentHeader',k:false},{t:'Flow widget',k:false},
+        {t:'Intrinsic sizing (avoid!)',k:false},
+      ],
+      resources:[
+        {label:'Slivers explained',url:'https://docs.flutter.dev/ui/layout/scrolling/slivers'},
+        {label:'Flutter layout constraints',url:'https://docs.flutter.dev/ui/layout/constraints'},
+      ]
+    },
+    {
+      title:'Custom painting & animations', dot:'#1D9E75', diff:'hard', time:'6 days',
+      why:'Required for senior Flutter roles. Many apps need custom charts, progress rings, or game-like UIs.',
+      topics:[
+        {t:'CustomPainter & Canvas',k:false},{t:'Path & drawing primitives',k:false},
+        {t:'AnimationController',k:false},{t:'Tween & CurvedAnimation',k:false},
+        {t:'AnimatedBuilder & AnimatedWidget',k:false},{t:'Hero animations',k:false},
+        {t:'Implicit animations',k:false},{t:'Staggered animations',k:false},
+        {t:'Rive & Lottie integration',k:false},{t:'Physics-based animations',k:false},
+      ],
+      resources:[
+        {label:'CustomPainter docs',url:'https://api.flutter.dev/flutter/rendering/CustomPainter-class.html'},
+        {label:'Flutter animations guide',url:'https://docs.flutter.dev/ui/animations'},
+        {label:'Rive (flutter_rive)',url:'https://pub.dev/packages/rive'},
+      ]
+    },
+    {
+      title:'Navigation & routing', dot:'#1D9E75', diff:'medium', time:'3 days',
+      why:'Deep links, auth guards, and nested routing are asked in every interview.',
+      topics:[
+        {t:'Navigator 1.0',k:true},{t:'Navigator 2.0 & Router',k:false},
+        {t:'go_router (official)',k:false},{t:'Route guards & middleware',k:false},
+        {t:'Deep links & App Links',k:false},{t:'Nested navigation',k:false},
+        {t:'Passing data between routes',k:false},
+      ],
+      resources:[
+        {label:'go_router docs',url:'https://pub.dev/packages/go_router'},
+        {label:'Deep linking guide',url:'https://docs.flutter.dev/ui/navigation/deep-linking'},
+      ]
+    },
+  ]
+},
+{
+  id:'p3', label:'State Management', color:'#D85A30', bg:'#FAECE7', textColor:'#712B13',
+  weeks:'3–4 weeks', difficulty:'hard', timeWeight:2,
+  desc:'You know BLoC and Provider. Now go deeper — understand tradeoffs, internals, and when to use what.',
+  sections:[
+    {
+      title:'setState & InheritedWidget', dot:'#D85A30', diff:'easy', time:'2 days',
+      why:'All state management packages are just abstractions over InheritedWidget. Know the foundation.',
+      topics:[
+        {t:'setState internals',k:true},{t:'InheritedWidget deep dive',k:false},
+        {t:'InheritedModel',k:false},{t:'ValueNotifier & ValueListenableBuilder',k:false},
+        {t:'ChangeNotifier',k:false},
+      ],
+      resources:[{label:'InheritedWidget explained',url:'https://api.flutter.dev/flutter/widgets/InheritedWidget-class.html'}]
+    },
+    {
+      title:'BLoC / Cubit mastery', dot:'#D85A30', diff:'hard', time:'7 days',
+      why:'You use BLoC but do you know BLoC-to-BLoC communication, testing BLoCs, and stream internals?',
+      topics:[
+        {t:'Cubit basics',k:true},{t:'BLoC with events',k:true},{t:'BlocProvider & BlocBuilder',k:true},
+        {t:'BlocListener & MultiBlocProvider',k:true},{t:'BLoC-to-BLoC communication',k:false},
+        {t:'HydratedBloc (persistence)',k:false},{t:'ReplayBloc (undo)',k:false},
+        {t:'Testing BLoCs with bloc_test',k:false},{t:'BLoC observer (logging)',k:false},
+        {t:'Optimistic UI updates',k:false},
+      ],
+      resources:[
+        {label:'bloclibrary.dev',url:'https://bloclibrary.dev'},
+        {label:'bloc_test package',url:'https://pub.dev/packages/bloc_test'},
+        {label:'Felix Angelov talks',url:'https://www.youtube.com/results?search_query=felix+angelov+bloc'},
+      ]
+    },
+    {
+      title:'Riverpod mastery', dot:'#D85A30', diff:'hard', time:'6 days',
+      why:'Riverpod is replacing Provider in most new projects. Code generation approach is now standard.',
+      topics:[
+        {t:'Provider basics',k:true},{t:'Riverpod basics',k:true},
+        {t:'Riverpod 2.0 with code gen',k:false},{t:'@riverpod annotation',k:false},
+        {t:'AsyncNotifier & Notifier',k:false},{t:'ref.watch vs ref.read vs ref.listen',k:false},
+        {t:'Family & autoDispose',k:false},{t:'Combining providers',k:false},
+        {t:'Testing with Riverpod',k:false},{t:'ProviderObserver',k:false},
+      ],
+      resources:[
+        {label:'riverpod.dev',url:'https://riverpod.dev'},
+        {label:'Riverpod code gen guide',url:'https://riverpod.dev/docs/concepts/about_code_generation'},
+      ]
+    },
+    {
+      title:'Other approaches (know the tradeoffs)', dot:'#D85A30', diff:'medium', time:'3 days',
+      why:'Interviewers ask "why BLoC over GetX?" You need a real answer, not an opinion.',
+      topics:[
+        {t:'GetX (overview only)',k:false},{t:'MobX (know it exists)',k:false},
+        {t:'Redux pattern in Flutter',k:false},{t:'Signals (new, watch)',k:false},
+        {t:'When to use what',k:false},
+      ],
+      resources:[{label:'State mgmt comparison',url:'https://docs.flutter.dev/data-and-backend/state-mgmt/options'}]
+    },
+  ]
+},
+{
+  id:'p4', label:'Architecture', color:'#185FA5', bg:'#E6F1FB', textColor:'#0C447C',
+  weeks:'4 weeks', difficulty:'hard', timeWeight:2,
+  desc:'You have Clean Architecture experience. Now learn to defend every decision and scale it to team codebases.',
+  sections:[
+    {
+      title:'Clean Architecture deep dive', dot:'#185FA5', diff:'medium', time:'5 days',
+      why:'You use it — but can you explain why each layer exists, what can cross layers, and what cannot?',
+      topics:[
+        {t:'Domain, Data, Presentation layers',k:true},{t:'UseCases / Interactors',k:true},
+        {t:'Repository Pattern',k:true},{t:'Entities vs Models',k:false},
+        {t:'Dependency inversion in practice',k:false},{t:'Feature-first folder structure',k:false},
+        {t:'Layer-first vs feature-first tradeoffs',k:false},{t:'When NOT to use Clean Architecture',k:false},
+      ],
+      resources:[
+        {label:'Reso Coder Clean Arch TDD',url:'https://resocoder.com/flutter-clean-architecture-tdd/'},
+        {label:'Very Good Ventures architecture',url:'https://verygood.ventures/blog/very-good-flutter-architecture'},
+      ]
+    },
+    {
+      title:'Dependency injection mastery', dot:'#185FA5', diff:'medium', time:'3 days',
+      why:'GetIt is just a service locator. Real DI means understanding the full pattern and its alternatives.',
+      topics:[
+        {t:'GetIt service locator',k:true},{t:'Injectable code gen',k:false},
+        {t:'Modular DI (injectable + modules)',k:false},{t:'Scope & lifetime (singleton, factory, lazy)',k:false},
+        {t:'DI with Riverpod (no GetIt needed)',k:false},{t:'Testing with mock DI',k:false},
+      ],
+      resources:[
+        {label:'injectable package',url:'https://pub.dev/packages/injectable'},
+        {label:'GetIt docs',url:'https://pub.dev/packages/get_it'},
+      ]
+    },
+    {
+      title:'Monorepo & modularization', dot:'#185FA5', diff:'hard', time:'5 days',
+      why:'Senior roles at product companies often involve multi-package repos. Melos is the standard.',
+      topics:[
+        {t:'Dart packages vs plugins',k:false},{t:'Local package structure',k:false},
+        {t:'Melos — monorepo tool',k:false},{t:'Feature modules as packages',k:false},
+        {t:'Shared UI package',k:false},{t:'Versioning strategy',k:false},
+      ],
+      resources:[
+        {label:'Melos docs',url:'https://melos.invertase.dev'},
+        {label:'VGV open source monorepo',url:'https://github.com/VeryGoodOpenSource'},
+      ]
+    },
+    {
+      title:'Error handling & resilience', dot:'#185FA5', diff:'hard', time:'4 days',
+      why:'Production apps fail. A senior dev builds systems that handle failure gracefully.',
+      topics:[
+        {t:'Either type pattern',k:true},{t:'fpdart in practice',k:true},
+        {t:'Failure classes hierarchy',k:false},{t:'Global error handling',k:false},
+        {t:'runZonedGuarded for crash capture',k:false},{t:'Retry strategies',k:false},
+        {t:'Connectivity-aware error handling',k:false},{t:'Sentry / Crashlytics integration',k:false},
+      ],
+      resources:[
+        {label:'fpdart',url:'https://pub.dev/packages/fpdart'},
+        {label:'Sentry Flutter',url:'https://pub.dev/packages/sentry_flutter'},
+      ]
+    },
+  ]
+},
+{
+  id:'p5', label:'Networking & Data', color:'#854F0B', bg:'#FAEEDA', textColor:'#633806',
+  weeks:'2–3 weeks', difficulty:'medium', timeWeight:1,
+  desc:'You have REST API experience. Fill the gaps around offline-first, caching strategies, and GraphQL.',
+  sections:[
+    {
+      title:'HTTP & Dio mastery', dot:'#854F0B', diff:'medium', time:'4 days',
+      why:'Interceptors for auth refresh, retry logic, and cancellation are senior-level expectations.',
+      topics:[
+        {t:'Retrofit + Dio',k:true},{t:'HTTP package',k:true},{t:'Dio interceptors',k:false},
+        {t:'Auth token refresh interceptor',k:false},{t:'Request cancellation',k:false},
+        {t:'Multipart / file upload',k:false},{t:'Certificate pinning',k:false},
+        {t:'Mocking HTTP in tests',k:false},
+      ],
+      resources:[
+        {label:'Dio docs',url:'https://pub.dev/packages/dio'},
+        {label:'Retrofit Flutter',url:'https://pub.dev/packages/retrofit'},
+      ]
+    },
+    {
+      title:'Local storage & offline-first', dot:'#854F0B', diff:'hard', time:'5 days',
+      why:'Offline-first is a core expectation for logistics/enterprise apps. Your background makes this relevant.',
+      topics:[
+        {t:'Hive (basic)',k:true},{t:'SharedPreferences',k:false},{t:'Hive advanced (TypeAdapters)',k:false},
+        {t:'Isar database',k:false},{t:'Drift (SQLite ORM)',k:false},{t:'Offline sync strategies',k:false},
+        {t:'Conflict resolution',k:false},{t:'Cache-first vs network-first',k:false},
+      ],
+      resources:[
+        {label:'Isar database',url:'https://isar.dev'},
+        {label:'Drift ORM',url:'https://drift.simonbinder.eu'},
+      ]
+    },
+    {
+      title:'Real-time & GraphQL', dot:'#854F0B', diff:'medium', time:'3 days',
+      why:'Firebase real-time, WebSockets, and GraphQL appear in modern product companies.',
+      topics:[
+        {t:'Firebase real-time DB',k:true},{t:'Supabase real-time',k:true},
+        {t:'WebSockets in Flutter',k:false},{t:'GraphQL (graphql_flutter)',k:false},
+        {t:'Server-sent events',k:false},
+      ],
+      resources:[
+        {label:'graphql_flutter',url:'https://pub.dev/packages/graphql_flutter'},
+        {label:'WebSocket docs',url:'https://api.flutter.dev/flutter/dart-io/WebSocket-class.html'},
+      ]
+    },
+  ]
+},
+{
+  id:'p6', label:'Performance', color:'#639922', bg:'#EAF3DE', textColor:'#27500A',
+  weeks:'3 weeks', difficulty:'hard', timeWeight:2,
+  desc:'Your resume mentions ANR reduction and memory caching. Now learn to measure, prove, and fix everything.',
+  sections:[
+    {
+      title:'Flutter DevTools mastery', dot:'#639922', diff:'medium', time:'4 days',
+      why:'Most devs open DevTools but don\'t know what to look for. You need to find jank in 2 minutes.',
+      topics:[
+        {t:'Timeline / Frame chart',k:false},{t:'Widget rebuild tracking',k:false},
+        {t:'Memory profiler',k:false},{t:'Network profiler',k:false},
+        {t:'CPU profiler',k:false},{t:'Performance overlay',k:false},
+        {t:'Dart Observatory',k:false},
+      ],
+      resources:[
+        {label:'DevTools docs',url:'https://docs.flutter.dev/tools/devtools'},
+        {label:'Flutter perf guide',url:'https://docs.flutter.dev/perf'},
+      ]
+    },
+    {
+      title:'Build optimization', dot:'#639922', diff:'hard', time:'5 days',
+      why:'Unnecessary rebuilds are the #1 Flutter performance killer. Senior devs catch these in code review.',
+      topics:[
+        {t:'const widgets everywhere',k:false},{t:'RepaintBoundary placement',k:false},
+        {t:'ListView.builder vs ListView',k:false},{t:'Avoiding expensive build()',k:false},
+        {t:'Selective rebuilds with Selector',k:false},{t:'shouldRebuild in InheritedWidget',k:false},
+        {t:'Image caching (cached_network_image)',k:false},{t:'Lazy loading & pagination',k:false},
+      ],
+      resources:[
+        {label:'Performance best practices',url:'https://docs.flutter.dev/perf/best-practices'},
+        {label:'cached_network_image',url:'https://pub.dev/packages/cached_network_image'},
+      ]
+    },
+    {
+      title:'Startup & app size', dot:'#639922', diff:'medium', time:'3 days',
+      why:'App size affects installs. Startup time affects reviews. Both are measurable and fixable.',
+      topics:[
+        {t:'Deferred loading (lazy imports)',k:false},{t:'Tree shaking',k:false},
+        {t:'Asset optimization',k:false},{t:'R8 & ProGuard',k:false},
+        {t:'App bundle vs APK',k:true},{t:'Dart compile optimizations',k:false},
+        {t:'Time to first frame',k:false},
+      ],
+      resources:[
+        {label:'App size guide',url:'https://docs.flutter.dev/perf/app-size'},
+        {label:'Deferred components',url:'https://docs.flutter.dev/perf/deferred-components'},
+      ]
+    },
+  ]
+},
+{
+  id:'p7', label:'Testing', color:'#993556', bg:'#FBEAF0', textColor:'#72243E',
+  weeks:'3 weeks', difficulty:'hard', timeWeight:2,
+  desc:'No evidence of testing in your resume. This will be the most important phase for job switch to top companies.',
+  sections:[
+    {
+      title:'Unit testing', dot:'#993556', diff:'medium', time:'5 days',
+      why:'Testing UseCases, Repositories, and BLoCs is the first thing a senior interviewer asks to see.',
+      topics:[
+        {t:'dart test basics',k:false},{t:'Arrange-Act-Assert',k:false},
+        {t:'Mocking with mocktail',k:false},{t:'Stubbing & verification',k:false},
+        {t:'Testing BLoC with bloc_test',k:false},{t:'Testing Riverpod',k:false},
+        {t:'Testing UseCases & Repositories',k:false},{t:'Testing async code',k:false},
+      ],
+      resources:[
+        {label:'mocktail',url:'https://pub.dev/packages/mocktail'},
+        {label:'bloc_test',url:'https://pub.dev/packages/bloc_test'},
+      ]
+    },
+    {
+      title:'Widget testing', dot:'#993556', diff:'hard', time:'5 days',
+      why:'Widget tests catch UI regressions without a device. Rarely done well — be the one who does.',
+      topics:[
+        {t:'WidgetTester basics',k:false},{t:'pump & pumpAndSettle',k:false},
+        {t:'Finding widgets (finders)',k:false},{t:'Tapping & gestures',k:false},
+        {t:'Testing navigation',k:false},{t:'Golden tests (screenshot)',k:false},
+        {t:'alchemist / golden_toolkit',k:false},
+      ],
+      resources:[
+        {label:'Widget testing guide',url:'https://docs.flutter.dev/cookbook/testing/widget/introduction'},
+        {label:'golden_toolkit',url:'https://pub.dev/packages/golden_toolkit'},
+      ]
+    },
+    {
+      title:'Integration & E2E testing', dot:'#993556', diff:'hard', time:'5 days',
+      why:'End-to-end tests on real devices. Patrol is now the standard — Appium is dead for Flutter.',
+      topics:[
+        {t:'integration_test package',k:false},{t:'Patrol framework',k:false},
+        {t:'Testing on CI (emulator/simulator)',k:false},{t:'Firebase Test Lab',k:false},
+        {t:'Page Object Pattern',k:false},
+      ],
+      resources:[
+        {label:'Patrol docs',url:'https://patrol.leancode.co'},
+        {label:'integration_test guide',url:'https://docs.flutter.dev/testing/integration-tests'},
+      ]
+    },
+    {
+      title:'TDD workflow', dot:'#993556', diff:'hard', time:'4 days',
+      why:'TDD is not about 100% coverage. It\'s a design discipline. Practice writing tests BEFORE code.',
+      topics:[
+        {t:'Red-Green-Refactor cycle',k:false},{t:'Test-first for UseCases',k:false},
+        {t:'Fake vs Mock vs Stub',k:false},{t:'Test doubles strategy',k:false},
+        {t:'Coverage reports',k:false},{t:'What NOT to test',k:false},
+      ],
+      resources:[{label:'TDD in Flutter (Reso Coder)',url:'https://resocoder.com/flutter-clean-architecture-tdd/'}]
+    },
+  ]
+},
+{
+  id:'p8', label:'Platform & Native', color:'#5F5E5A', bg:'#F1EFE8', textColor:'#2C2C2A',
+  weeks:'3 weeks', difficulty:'hard', timeWeight:1.5,
+  desc:'Your Kotlin experience is a huge advantage here. Writing platform channels and plugins sets you apart.',
+  sections:[
+    {
+      title:'Platform channels', dot:'#5F5E5A', diff:'hard', time:'5 days',
+      why:'Writing custom native functionality is a senior-only skill. Most Flutter devs only consume plugins.',
+      topics:[
+        {t:'MethodChannel (call native from Dart)',k:false},{t:'EventChannel (streams from native)',k:false},
+        {t:'BasicMessageChannel',k:false},{t:'Pigeon (type-safe channels)',k:false},
+        {t:'Platform views',k:false},{t:'Error handling across channels',k:false},
+      ],
+      resources:[
+        {label:'Platform channels docs',url:'https://docs.flutter.dev/platform-integration/platform-channels'},
+        {label:'Pigeon package',url:'https://pub.dev/packages/pigeon'},
+      ]
+    },
+    {
+      title:'Writing a Flutter plugin', dot:'#5F5E5A', diff:'hard', time:'5 days',
+      why:'Publishing your own plugin on pub.dev is a massive portfolio item and resume line.',
+      topics:[
+        {t:'Plugin project structure',k:false},{t:'Federated plugins',k:false},
+        {t:'Android implementation (Kotlin)',k:false},{t:'iOS implementation (Swift)',k:false},
+        {t:'Publishing to pub.dev',k:false},{t:'Semantic versioning',k:false},
+      ],
+      resources:[
+        {label:'Flutter plugin guide',url:'https://docs.flutter.dev/packages-and-plugins/developing-packages'},
+        {label:'pub.dev publishing',url:'https://dart.dev/tools/pub/publishing'},
+      ]
+    },
+    {
+      title:'Dart FFI & native code', dot:'#5F5E5A', diff:'hard', time:'4 days',
+      why:'For performance-critical code (image processing, crypto). Rare skill — stand out.',
+      topics:[
+        {t:'Dart FFI basics',k:false},{t:'Calling C from Dart',k:false},
+        {t:'Memory management with FFI',k:false},{t:'ffigen tool',k:false},
+      ],
+      resources:[{label:'Dart FFI guide',url:'https://dart.dev/interop/c-interop'}]
+    },
+    {
+      title:'Platform-specific features', dot:'#5F5E5A', diff:'medium', time:'3 days',
+      why:'Push notifications, biometrics, background tasks — these appear in every real app.',
+      topics:[
+        {t:'Push notifications (FCM + APNs)',k:false},{t:'local_notifications',k:false},
+        {t:'Biometric auth (local_auth)',k:false},{t:'Background tasks (workmanager)',k:false},
+        {t:'App lifecycle & background mode',k:false},{t:'Share & intent handling',k:false},
+      ],
+      resources:[
+        {label:'firebase_messaging',url:'https://pub.dev/packages/firebase_messaging'},
+        {label:'workmanager',url:'https://pub.dev/packages/workmanager'},
+      ]
+    },
+  ]
+},
+{
+  id:'p9', label:'Release & DevOps', color:'#0F6E56', bg:'#E1F5EE', textColor:'#04342C',
+  weeks:'1–2 weeks', difficulty:'easy', timeWeight:0.5,
+  desc:'You already do this well. Polish your knowledge and learn Fastlane + Codemagic properly.',
+  sections:[
+    {
+      title:'CI/CD pipelines', dot:'#0F6E56', diff:'medium', time:'4 days',
+      why:'You have CI/CD experience — now learn to build it from scratch, not just maintain it.',
+      topics:[
+        {t:'GitHub Actions for Flutter',k:true},{t:'Codemagic',k:false},
+        {t:'Fastlane (Android & iOS)',k:false},{t:'Automated testing in CI',k:false},
+        {t:'Environment configs (flavors)',k:false},{t:'Secrets management',k:false},
+        {t:'Automated Play Store deploy',k:false},{t:'TestFlight automation',k:false},
+      ],
+      resources:[
+        {label:'Codemagic docs',url:'https://docs.codemagic.io'},
+        {label:'Fastlane docs',url:'https://fastlane.tools'},
+      ]
+    },
+    {
+      title:'App flavors & environments', dot:'#0F6E56', diff:'medium', time:'3 days',
+      why:'Dev/Staging/Prod environments with separate configs is standard at any good company.',
+      topics:[
+        {t:'Flutter flavors (Android)',k:false},{t:'Schemes (iOS)',k:false},
+        {t:'dart-define vs flavor',k:false},{t:'Environment-based config',k:false},
+        {t:'firebase_options per flavor',k:false},
+      ],
+      resources:[{label:'Flutter flavors guide',url:'https://docs.flutter.dev/deployment/flavors'}]
+    },
+    {
+      title:'Monitoring & crash reporting', dot:'#0F6E56', diff:'medium', time:'2 days',
+      why:'You built a crash dashboard — now know the industry-standard tools.',
+      topics:[
+        {t:'Firebase Crashlytics',k:false},{t:'Sentry Flutter',k:false},
+        {t:'Custom error boundaries',k:false},{t:'Performance monitoring',k:false},{t:'Analytics events',k:false},
+      ],
+      resources:[{label:'Sentry Flutter',url:'https://pub.dev/packages/sentry_flutter'}]
+    },
+  ]
+},
+{
+  id:'p10', label:'Portfolio & Jobs', color:'#534AB7', bg:'#EEEDFE', textColor:'#26215C',
+  weeks:'Ongoing', difficulty:'strategic', timeWeight:1,
+  desc:'What actually gets you hired. Your POS project is strong — now build on it strategically.',
+  sections:[
+    {
+      title:'Portfolio strategy', dot:'#534AB7', diff:'medium', time:'ongoing',
+      why:'3 great projects beats 10 mediocre ones. Quality, live links, and GitHub activity matter.',
+      topics:[
+        {t:'POS app (you have this — keep it live)',k:true},{t:'Blog app (you have this)',k:true},
+        {t:'Open source a Flutter package on pub.dev',k:false},{t:'1 app with 80%+ test coverage',k:false},
+        {t:'Contribute to flutter/flutter',k:false},{t:'Write 5+ technical articles',k:false},
+        {t:'GitHub profile README',k:false},
+      ],
+      resources:[
+        {label:'pub.dev publishing guide',url:'https://dart.dev/tools/pub/publishing'},
+        {label:'Hashnode (blogging)',url:'https://hashnode.com'},
+      ]
+    },
+    {
+      title:'Interview preparation', dot:'#534AB7', diff:'hard', time:'3–4 weeks',
+      why:'Flutter interviews have a unique pattern. Most candidates fail on internals and live coding.',
+      topics:[
+        {t:'Widget lifecycle questions',k:false},{t:'State management tradeoffs',k:false},
+        {t:'Architecture whiteboard',k:false},{t:'Performance debugging session',k:false},
+        {t:'Live coding (Dart DSA)',k:true},{t:'System design for mobile',k:false},
+        {t:'Explain your past projects deeply',k:false},{t:'STAR format answers',k:false},
+      ],
+      resources:[
+        {label:'Flutter interview questions',url:'https://github.com/flutter/flutter/wiki/Contributing-to-Flutter'},
+        {label:'LeetCode (Dart)',url:'https://leetcode.com'},
+      ]
+    },
+    {
+      title:'Where to apply', dot:'#534AB7', diff:'easy', time:'ongoing',
+      why:'Most Flutter jobs in India are from startups. Target the right companies.',
+      topics:[
+        {t:'Wellfound (AngelList) — startups',k:false},{t:'LinkedIn — filter: Flutter',k:false},
+        {t:'Toptal — freelance/contract',k:false},{t:'Instamojo, Razorpay, Juspay',k:false},
+        {t:'Remote-first companies',k:false},{t:'Flutter agency firms',k:false},
+      ],
+      resources:[
+        {label:'Wellfound Flutter jobs',url:'https://wellfound.com/jobs?q=flutter'},
+        {label:'LinkedIn Flutter jobs',url:'https://www.linkedin.com/jobs/search/?keywords=flutter+developer+india'},
+      ]
+    },
+  ]
+},
+];
+
+const diffColors = {
+  easy:{bg:'#EAF3DE',color:'#27500A',label:'Easy — skim fast'},
+  medium:{bg:'#E6F1FB',color:'#0C447C',label:'Medium — steady pace'},
+  hard:{bg:'#FAECE7',color:'#712B13',label:'Hard — slow down'},
+  strategic:{bg:'#EEEDFE',color:'#3C3489',label:'Strategic — ongoing'},
+};
+
+let activePhase = 'p1';
+
+function render(){
+  const nav = document.getElementById('nav');
+  const phasesEl = document.getElementById('phases');
+  const obBar = document.getElementById('overall-bar');
+
+  obBar.innerHTML = phases.map((p,i)=>`<div class="ob-seg" style="background:${p.color};opacity:${activePhase===p.id?1:0.25}" title="${p.label}"></div>`).join('');
+
+  nav.innerHTML = phases.map(p=>`<button class="nav-btn${activePhase===p.id?' active':''}" onclick="setPhase('${p.id}')">${p.label}</button>`).join('');
+
+  phasesEl.innerHTML = phases.map(p=>`
+    <div class="phase${activePhase===p.id?' active':''}" id="${p.id}">
+      <div class="phase-header">
+        <div>
+          <div class="phase-pill" style="background:${p.bg};color:${p.textColor}">${p.weeks}</div>
+        </div>
+        <div class="phase-info">
+          <h2>${p.label}</h2>
+          <p>${p.desc}</p>
+          <div class="timeline-bar">
+            <div class="tbar-track"><div class="tbar-fill" style="background:${p.color};width:${Math.min(100,p.timeWeight/2*100)}%"></div></div>
+            <span class="tbar-label">${diffColors[p.difficulty]?.label||p.difficulty}</span>
+          </div>
+        </div>
+      </div>
+      <div class="sections">
+        ${p.sections.map((s,si)=>`
+          <div class="section">
+            <div class="section-head" onclick="toggleSection('${p.id}-${si}')">
+              <div class="section-dot" style="background:${s.dot}"></div>
+              <span class="section-title">${s.title}</span>
+              <div class="section-meta">
+                <span class="diff-badge" style="background:${diffColors[s.diff]?.bg};color:${diffColors[s.diff]?.color}">${s.diff}</span>
+                <span class="time-badge">${s.time}</span>
+              </div>
+              <span class="chevron" id="chev-${p.id}-${si}">▶</span>
+            </div>
+            <div class="section-body" id="body-${p.id}-${si}">
+              <div class="why-box">Why this matters: ${s.why}</div>
+              <div class="topics-grid">
+                ${s.topics.map(t=>`
+                  <div class="topic-item${t.k?' know':''}">
+                    <div class="topic-dot" style="background:${t.k?'#639922':s.dot}"></div>
+                    <span>${t.t}${t.k?' (you know this)':''}</span>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="res-row">
+                ${s.resources.map(r=>`<a class="res-chip" href="${r.url}" target="_blank">${r.label}</a>`).join('')}
+              </div>
+              <button class="ask-btn" onclick="sendPrompt('Teach me ${s.title} in detail with examples')">Deep dive: ${s.title} ↗</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="footer-nav">
+        ${phases.findIndex(p2=>p2.id===p.id)>0?`<button class="fnav-btn" onclick="setPhase('${phases[phases.findIndex(p2=>p2.id===p.id)-1].id}')">← Previous</button>`:'<span></span>'}
+        ${phases.findIndex(p2=>p2.id===p.id)<phases.length-1?`<button class="fnav-btn" onclick="setPhase('${phases[phases.findIndex(p2=>p2.id===p.id)+1].id}')">Next →</button>`:'<span style="font-size:12px;color:var(--color-text-tertiary)">All phases covered</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function setPhase(id){
+  activePhase=id;
+  render();
+  document.getElementById('nav').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function toggleSection(key){
+  const body = document.getElementById('body-'+key);
+  const chev = document.getElementById('chev-'+key);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+
+render();
+</script>
