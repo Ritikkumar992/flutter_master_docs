@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritik — Flutter Interview Prep</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: #1e1e2e;
+    --border2: #2a2a3d;
+    --accent: #7c6ef2;
+    --accent2: #5ddcb0;
+    --accent3: #f2a96e;
+    --text: #e8e6f0;
+    --text2: #9591b0;
+    --text3: #5a5775;
+    --easy: #4eca8b;
+    --medium: #d4b84a;
+    --hard: #e06060;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* LAYOUT */
+  .shell { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding-bottom: 2rem;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .main { flex: 1; max-width: 860px; padding: 2.5rem 2.5rem 6rem; }
+
+  /* SIDEBAR */
+  .brand {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .brand p { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .search-wrap { padding: 0.75rem 1.25rem; }
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--text3); }
+
+  .cat-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    padding: 0.75rem 1.25rem 0.35rem;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 1.25rem;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+  }
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(124,110,242,0.06); }
+
+  .score-box {
+    margin: 1rem 1.25rem 0;
+    padding: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .score-box p { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+  .score-num { font-family: 'IBM Plex Mono', monospace; font-size: 22px; color: var(--accent2); }
+  .score-label { font-size: 10px; color: var(--text3); }
+  .score-bar { height: 3px; background: var(--border2); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .score-fill { height: 100%; background: var(--accent2); border-radius: 2px; transition: width .5s; }
+
+  /* HERO */
+  .hero { margin-bottom: 2.5rem; }
+  .hero-eye {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .hero-title span { color: var(--accent); }
+  .hero-desc { font-size: 13px; color: var(--text2); max-width: 520px; line-height: 1.7; }
+
+  .stats-row { display: flex; gap: 0.75rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+  }
+  .stat-num { font-family: 'IBM Plex Mono', monospace; font-size: 18px; color: var(--accent2); }
+  .stat-label { font-size: 10px; color: var(--text3); }
+
+  /* CATEGORY HEADER */
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2.5rem 0 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 1.5rem;
+  }
+  .cat-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .cat-info h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .cat-info p { font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: var(--border2); }
+  .q-card.answered { border-color: rgba(93,220,176,0.3); }
+
+  .q-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 15px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    padding-top: 2px;
+    flex-shrink: 0;
+    min-width: 28px;
+  }
+
+  .q-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .q-text small {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--text3);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .q-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  .diff {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+  }
+  .diff-easy   { background: rgba(78,202,139,0.12); color: var(--easy); }
+  .diff-medium { background: rgba(212,184,74,0.12);  color: var(--medium); }
+  .diff-hard   { background: rgba(224,96,96,0.12);   color: var(--hard); }
+
+  .freq {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .freq-hot  { background: rgba(242,169,110,0.12); color: var(--accent3); }
+  .freq-warm { background: rgba(124,110,242,0.12); color: var(--accent); }
+
+  .check-btn {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border2);
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: transparent;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .check-btn.done { border-color: var(--accent2); background: rgba(93,220,176,0.15); color: var(--accent2); }
+
+  .chevron {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(90deg); }
+
+  /* ANSWER BODY */
+  .q-body { display: none; border-top: 1px solid var(--border); }
+  .q-body.open { display: block; }
+
+  .answer-wrap { padding: 14px 16px; }
+
+  .answer-section { margin-bottom: 12px; }
+  .answer-section:last-child { margin-bottom: 0; }
+
+  .ans-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .ans-text {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--accent2);
+    line-height: 1.7;
+    margin-top: 6px;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .highlight {
+    background: rgba(124,110,242,0.08);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  .your-exp {
+    background: rgba(78,202,139,0.06);
+    border-left: 2px solid var(--easy);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 11.5px;
+    color: var(--easy);
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  .trap {
+    background: rgba(224,96,96,0.06);
+    border-left: 2px solid var(--hard);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 12px;
+    font-size: 11.5px;
+    color: #e08080;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* FILTER BAR */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-size: 11.5px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all .15s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: rgba(124,110,242,0.12); border-color: var(--accent); color: var(--accent); }
+
+  /* PROGRESS */
+  .progress-bar-wrap { margin-bottom: 2rem; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; transition: width .4s; }
+
+  .no-results { display: none; padding: 3rem; text-align: center; color: var(--text3); font-size: 13px; }
+
+  @media (max-width: 768px) {
+    .shell { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; }
+    .main { padding: 1.25rem; }
+    .hero-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="brand">
+    <h1>Flutter Interview Prep</h1>
+    <p>Ritik Kumar — 2+ yrs experience level</p>
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search questions..." oninput="handleSearch(this.value)">
+  </div>
+
+  <div id="nav-list"></div>
+
+  <div class="score-box">
+    <p>Questions answered</p>
+    <div>
+      <span class="score-num" id="score-num">0</span>
+      <span class="score-label" id="score-label"> / 0</span>
+    </div>
+    <div class="score-bar"><div class="score-fill" id="score-fill" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main" id="main">
+
+  <div class="hero">
+    <div class="hero-eye">Interview Preparation · 2+ Years Level</div>
+    <h1 class="hero-title">Flutter <span>Interview</span><br>Question Bank</h1>
+    <p class="hero-desc">Real questions asked at your experience level. Every answer includes what to say, a code example, and how to connect it to your actual POS project.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Questions</div></div>
+      <div class="stat"><div class="stat-num" id="stat-hot">0</div><div class="stat-label">Hot topics</div></div>
+      <div class="stat"><div class="stat-num" id="stat-cats">0</div><div class="stat-label">Categories</div></div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterDiff('all',this)">All</button>
+    <button class="filter-btn" onclick="filterDiff('easy',this)">Easy</button>
+    <button class="filter-btn" onclick="filterDiff('medium',this)">Medium</button>
+    <button class="filter-btn" onclick="filterDiff('hard',this)">Hard</button>
+    <button class="filter-btn" onclick="filterDiff('hot',this)">🔥 Hot</button>
+    <button class="filter-btn" onclick="filterDiff('unanswered',this)">Unanswered</button>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-info">
+      <span>Overall progress</span>
+      <span id="prog-text">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div id="content"></div>
+  <div class="no-results" id="no-results">No questions match your search.</div>
+
+</main>
+</div>
+
+<script>
+const QS = [
+  {
+    cat: "Dart Core",
+    icon: "◆",
+    iconBg: "rgba(93,220,176,0.12)",
+    iconColor: "#5ddcb0",
+    desc: "Dart fundamentals that every interviewer tests",
+    questions: [
+      {
+        q: "What is the difference between var, dynamic, and Object in Dart?",
+        hint: "Very commonly asked — gets most candidates tripped up",
+        diff: "easy", freq: "hot",
+        answer: "var infers the type at compile time and that type is fixed. dynamic disables type checking entirely — the compiler trusts you. Object is the base type of everything — you can assign any value but you can't call methods without casting.",
+        code: `var name = "Ritik";     // inferred as String, fixed
+dynamic value = 42;    // can change to any type at runtime
+Object obj = "hello"; // needs cast to call String methods
+print((obj as String).length);`,
+        highlight: "In interviews say: 'var is compile-time inference with a fixed type. dynamic is runtime type resolution — use it only when you have no choice.'",
+        yourExp: "In your POS app — API response models use typed classes, never dynamic. Mention this.",
+        trap: "Never say var and dynamic are the same. They are fundamentally different in type safety."
+      },
+      {
+        q: "What is the difference between final and const?",
+        hint: "Asked in almost every Flutter interview",
+        diff: "easy", freq: "hot",
+        answer: "final is set once at runtime — the value is determined when the line runs. const is a compile-time constant — the value must be known before the app runs. const objects are canonicalized — Flutter reuses the same instance.",
+        code: `final now = DateTime.now();  // runtime — different every run
+const pi = 3.14159;           // compile-time — always same
+
+// In Flutter — const widgets are never rebuilt unnecessarily
+const Text('Hello')  // same instance reused — performance win`,
+        highlight: "Key insight: const widgets in Flutter skip the rebuild process entirely. This is a performance optimization.",
+        yourExp: "In your POS app — static UI elements like labels and icons should be const. Mention you use this for performance.",
+        trap: "const inside a class needs a const constructor. Forgetting this is a common mistake."
+      },
+      {
+        q: "What is null safety in Dart and why does it matter?",
+        hint: "Theory question — explain the 'why' not just the '?'",
+        diff: "easy", freq: "hot",
+        answer: "Null safety means the type system guarantees a variable cannot be null unless you explicitly declare it nullable with ?. This eliminates null reference errors at compile time rather than runtime. It divides types into nullable (String?) and non-nullable (String).",
+        code: `String name = "Ritik";   // can never be null
+String? city = null;     // explicitly nullable
+
+// Safe navigation
+print(city?.length);     // null if city is null
+print(city ?? "Unknown"); // fallback value
+print(city!.length);     // force unwrap — crashes if null`,
+        highlight: "Say: 'Null safety moved an entire class of runtime crashes to compile-time errors. The ! operator is a code smell — if you use it a lot, your architecture has a problem.'",
+        yourExp: "Your POS app uses null safety throughout. API models have nullable fields like receiverPhone? for optional data.",
+        trap: "Don't say ! is fine to use liberally. Interviewers know it means you're bypassing null safety."
+      },
+      {
+        q: "What is the difference between Future and Stream?",
+        hint: "Core async concept — must answer clearly",
+        diff: "medium", freq: "hot",
+        answer: "A Future represents a single async value that will be available once. A Stream represents a sequence of async values over time — like events. Future is one-shot. Stream is ongoing.",
+        code: `// Future — one value, once
+Future<String> fetchUser() async {
+  return await api.getUser();
+}
+
+// Stream — multiple values over time
+Stream<int> counter() async* {
+  for (int i = 0; i < 5; i++) {
+    await Future.delayed(Duration(seconds: 1));
+    yield i;
+  }
+}`,
+        highlight: "Real world: API calls = Future. WebSocket messages, location updates, database listeners = Stream.",
+        yourExp: "In your POS app — API calls use Future via Retrofit. Real-time parcel tracking uses Stream to push location updates to UI.",
+        trap: "Don't confuse broadcast streams (multiple listeners) with single-subscription streams (one listener). Broadcast streams can be listened to multiple times."
+      },
+      {
+        q: "What is an Isolate in Dart?",
+        hint: "Common at 2+ year level — shows you understand threading",
+        diff: "medium", freq: "warm",
+        answer: "Dart is single-threaded. An Isolate is a separate thread of execution with its own memory heap — they don't share memory and communicate only through message passing. Use them for heavy computation to keep the UI smooth.",
+        code: `// Simple way — compute()
+final result = await compute(parseJson, jsonString);
+
+// Manual isolate
+final receivePort = ReceivePort();
+await Isolate.spawn(heavyTask, receivePort.sendPort);
+receivePort.listen((data) => print(data));`,
+        highlight: "Key: Isolates don't share memory — no race conditions. This is fundamentally different from threads in Java/Kotlin.",
+        yourExp: "In your POS app — parsing large shipment booking lists (20k records) could use compute() to avoid UI jank.",
+        trap: "Plugins that use platform channels cannot be called from a background isolate directly — this is a common gotcha."
+      },
+      {
+        q: "What are Mixins in Dart and when do you use them?",
+        hint: "Differentiates average from good candidates",
+        diff: "medium", freq: "warm",
+        answer: "Mixins allow you to reuse code in multiple class hierarchies without inheritance. Use with keyword. Unlike extending a class, you can mix in multiple mixins. Use them for shared behaviour that doesn't fit in an inheritance chain.",
+        code: `mixin Loggable {
+  void log(String msg) => print('[LOG] $msg');
+}
+
+mixin Cacheable {
+  final _cache = <String, dynamic>{};
+  void cache(String key, dynamic val) => _cache[key] = val;
+}
+
+class UserRepository with Loggable, Cacheable {
+  void getUser() {
+    log('Fetching user');
+    cache('user', {'id': 1});
+  }
+}`,
+        highlight: "Say: 'I use mixins for cross-cutting concerns — logging, caching, analytics — that multiple repositories share without duplicating code.'",
+        yourExp: "In your POS app — a Loggable mixin or ErrorHandler mixin could be shared across all repository classes.",
+        trap: "Mixins cannot have constructors with arguments. And a class can only be used as a mixin if it doesn't extend anything other than Object (unless declared with mixin keyword)."
+      },
+    ]
+  },
+  {
+    cat: "Flutter Core",
+    icon: "⬡",
+    iconBg: "rgba(124,110,242,0.12)",
+    iconColor: "#7c6ef2",
+    desc: "Widget system, lifecycle, rendering — asked in every interview",
+    questions: [
+      {
+        q: "What is the difference between StatelessWidget and StatefulWidget?",
+        hint: "First question in almost every Flutter interview",
+        diff: "easy", freq: "hot",
+        answer: "StatelessWidget is immutable — it cannot change after it is built. It rebuilds only when its parent rebuilds with new data. StatefulWidget has a separate State object that persists across rebuilds and can call setState() to trigger a rebuild.",
+        code: `// Stateless — UI depends only on constructor params
+class Label extends StatelessWidget {
+  final String text;
+  const Label(this.text);
+  @override
+  Widget build(BuildContext context) => Text(text);
+}
+
+// Stateful — UI depends on internal mutable state
+class Counter extends StatefulWidget {
+  @override
+  State<Counter> createState() => _CounterState();
+}
+class _CounterState extends State<Counter> {
+  int count = 0;
+  @override
+  Widget build(BuildContext context) =>
+    ElevatedButton(
+      onPressed: () => setState(() => count++),
+      child: Text('$count'),
+    );
+}`,
+        highlight: "Key insight: The Widget is just a blueprint. The State object is what actually lives in the element tree and persists.",
+        yourExp: "In your POS app — booking form screens are StatefulWidget (form state). Summary cards and labels are StatelessWidget.",
+        trap: "Don't say 'StatefulWidget is heavier.' The widget itself is not heavier — it just creates a separate State object. The overhead is minimal."
+      },
+      {
+        q: "Explain the Flutter widget lifecycle in order.",
+        hint: "Asked at every 1-3 year level. Must memorize order.",
+        diff: "medium", freq: "hot",
+        answer: "For StatefulWidget the lifecycle is: createState → initState → didChangeDependencies → build → didUpdateWidget (if parent rebuilds) → deactivate → dispose.",
+        code: `class MyWidget extends StatefulWidget {
+  @override
+  State<MyWidget> createState() => _MyState();
+}
+
+class _MyState extends State<MyWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // Called once — init controllers, fetch data
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Called when InheritedWidget above changes
+  }
+
+  @override
+  Widget build(BuildContext context) => Container();
+
+  @override
+  void didUpdateWidget(MyWidget old) {
+    super.didUpdateWidget(old);
+    // Called when parent rebuilds with new widget
+  }
+
+  @override
+  void dispose() {
+    // Clean up controllers, subscriptions — ALWAYS
+    super.dispose();
+  }
+}`,
+        highlight: "Interviewers love asking: 'Where do you make your API call?' Answer: initState(). 'Where do you dispose controllers?' Answer: dispose() — always.",
+        yourExp: "In your POS app booking screen — initState fetches dropdown data (areas, cities). dispose() closes TextEditingControllers.",
+        trap: "Never call setState() after dispose(). This crashes the app. Always check mounted before async setState calls."
+      },
+      {
+        q: "What is BuildContext and what does it represent?",
+        hint: "Trips up most candidates — must have a clear answer",
+        diff: "medium", freq: "hot",
+        answer: "BuildContext is a reference to a widget's location in the widget tree. It's how a widget finds its ancestors — like Theme, MediaQuery, Provider. Every widget gets its own BuildContext in the build() method.",
+        code: `@override
+Widget build(BuildContext context) {
+  // context knows WHERE this widget is in the tree
+  
+  // Find nearest Theme above this widget
+  final theme = Theme.of(context);
+  
+  // Find nearest Navigator above this widget
+  Navigator.of(context).push(...);
+  
+  // Find nearest Provider above this widget
+  final vm = context.read<BookingViewModel>();
+  
+  return Container(color: theme.primaryColor);
+}`,
+        highlight: "Say: 'BuildContext is a handle to a widget's position in the element tree. It allows widgets to walk up the tree to find inherited data.'",
+        yourExp: "In your POS app — you use context to access Provider state in booking screens and Navigator for routing between screens.",
+        trap: "Never use BuildContext across async gaps without checking mounted. The context may become invalid after an await."
+      },
+      {
+        q: "What are Keys in Flutter and why are they important?",
+        hint: "Separates 1-year devs from 2+ year devs",
+        diff: "medium", freq: "hot",
+        answer: "Keys help Flutter's reconciliation algorithm identify which widget corresponds to which element when the widget tree changes. Without keys, Flutter matches widgets by type and position. With keys, Flutter matches by key identity.",
+        code: `// Without keys — Flutter gets confused in lists
+ListView(children: items.map((i) => ItemWidget(i)).toList())
+
+// With keys — Flutter correctly tracks each item
+ListView(children: items.map((i) =>
+  ItemWidget(key: ValueKey(i.id), item: i)
+).toList())
+
+// GlobalKey — access state from outside
+final formKey = GlobalKey<FormState>();
+Form(key: formKey, child: ...)
+formKey.currentState?.validate();`,
+        highlight: "Key rule: Whenever you have a list of stateful widgets that can reorder or change — always use ValueKey with a unique ID.",
+        yourExp: "In your POS booking list — each CNote is unique. Using ValueKey(cnote) ensures Flutter correctly tracks each booking row.",
+        trap: "Using index as a key is wrong — if items reorder the index stays the same but the item changed. Always use a unique business ID."
+      },
+      {
+        q: "Explain Flutter's rendering pipeline — the three trees.",
+        hint: "Senior-level question — shows deep understanding",
+        diff: "hard", freq: "warm",
+        answer: "Flutter has three parallel trees. Widget tree — immutable blueprints created and destroyed each frame. Element tree — mutable, long-lived, manages widget lifecycle and holds State. RenderObject tree — handles layout and painting. Widgets are cheap to create because the real work is in Elements and RenderObjects.",
+        code: `// Widget — just a config object, immutable
+Text("Hello")  // created fresh every build()
+
+// Element — created once, updated when widget changes
+// Holds the State object for StatefulWidget
+// This is why State persists across rebuilds
+
+// RenderObject — does the actual layout + paint
+// TextRenderObject measures text, paints pixels`,
+        highlight: "Say: 'Widgets are lightweight because they are just descriptions. The element tree does the heavy lifting of reconciliation, and the render tree handles the actual pixels.'",
+        yourExp: "This explains why your POS booking list is performant — ListView.builder creates widgets lazily but elements are reused.",
+        trap: "Don't say Flutter recreates everything on every frame. Only the Widget tree is rebuilt. Elements and RenderObjects are reused and updated."
+      },
+      {
+        q: "What is the difference between hot reload and hot restart?",
+        hint: "Simple but must be precise",
+        diff: "easy", freq: "hot",
+        answer: "Hot reload injects new code into the running Dart VM and rebuilds the widget tree from the current state — state is preserved. Hot restart restarts the Dart VM from scratch — all state is lost but app code is fully reloaded.",
+        code: `Hot Reload  (r)  → State preserved, widget tree rebuilt
+                     Works for: UI changes, widget changes
+                     Fails for: initState changes, main() changes
+
+Hot Restart (R)  → State cleared, full restart
+                     Works for: everything hot reload fails`,
+        highlight: "Key: Hot reload calls build() on dirty widgets but does NOT call initState() again. If your change is in initState() — use hot restart.",
+        yourExp: "Daily experience in your POS dev — you use hot reload for UI tweaks and hot restart when changing initialization logic.",
+        trap: "Hot reload doesn't work for changes to native code, main(), or global variables initialized at startup."
+      },
+    ]
+  },
+  {
+    cat: "State Management",
+    icon: "⟳",
+    iconBg: "rgba(242,169,110,0.12)",
+    iconColor: "#f2a96e",
+    desc: "Provider, BLoC, Riverpod — your strongest area",
+    questions: [
+      {
+        q: "Why do we need state management? What problem does setState solve and what problem does it create?",
+        hint: "Theory first — shows you understand the WHY",
+        diff: "easy", freq: "hot",
+        answer: "setState solves local UI state inside one widget. The problem is when multiple widgets need the same state — you'd need to lift state up through many layers (prop drilling). State management libraries solve this by providing a shared state container that any widget can access.",
+        code: `// Problem — passing data through many layers
+AppWidget → ScreenWidget → CardWidget → ButtonWidget
+// ButtonWidget needs data from AppWidget
+// Every layer in between must accept and pass it down
+
+// Solution — Provider puts state in a shared container
+// Any widget can access it directly via context`,
+        highlight: "Say: 'setState is fine for local, self-contained state. Once two unrelated widgets share state, you need state management.'",
+        yourExp: "In your POS app — booking form uses local setState for field validation. Booking list data uses Provider since multiple screens show the same data.",
+        trap: ""
+      },
+      {
+        q: "Explain Provider — how does it work under the hood?",
+        hint: "You use Provider daily — must know internals",
+        diff: "medium", freq: "hot",
+        answer: "Provider is built on top of InheritedWidget. InheritedWidget is Flutter's built-in mechanism for passing data down the tree efficiently. When you call notifyListeners(), Provider marks dependent widgets as dirty and Flutter rebuilds only those widgets.",
+        code: `// Provider wraps InheritedWidget
+ChangeNotifierProvider(
+  create: (_) => BookingViewModel(),
+  child: BookingScreen(),
+)
+
+// context.watch — rebuilds when notifyListeners called
+final vm = context.watch<BookingViewModel>();
+
+// context.read — does NOT rebuild, just reads once
+final vm = context.read<BookingViewModel>();
+
+// context.select — rebuilds only when specific field changes
+final total = context.select<BookingViewModel, double>(
+  (vm) => vm.totalAmount
+);`,
+        highlight: "Key: context.watch = live listener (rebuilds). context.read = one-time read (no rebuild). context.select = granular rebuild on specific field.",
+        yourExp: "In your POS app — booking list screen watches the ViewModel. Submit button reads it once on tap. Total charge display selects only the amount field.",
+        trap: "Never call context.read() inside build() for reactive data. Use context.watch() or context.select() instead."
+      },
+      {
+        q: "What is the difference between BLoC and Cubit?",
+        hint: "Direct comparison question — must be crisp",
+        diff: "medium", freq: "hot",
+        answer: "Cubit is a simplified version of BLoC. Cubit uses functions to emit states directly. BLoC uses Events — you add an event, BLoC processes it and emits a state. BLoC adds traceability since every state change has a named event. Cubit is simpler for straightforward cases.",
+        code: `// Cubit — simpler, direct function calls
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+  void increment() => emit(state + 1);
+}
+
+// BLoC — event-driven, more traceable
+class CounterBloc extends Bloc<CounterEvent, int> {
+  CounterBloc() : super(0) {
+    on<IncrementEvent>((event, emit) => emit(state + 1));
+  }
+}`,
+        highlight: "When to use BLoC: complex flows, multiple event types, when you need to log/trace every state change. When to use Cubit: simple state, fewer transitions, rapid development.",
+        yourExp: "In your Blog app — you use BLoC/Cubit. For simple auth state use Cubit. For complex booking flow with multiple events (load, filter, submit, error) use BLoC.",
+        trap: "BLoC and Cubit are not interchangeable in complex flows. BLoC's event system makes debugging much easier when you have 10+ state transitions."
+      },
+      {
+        q: "What is the difference between BlocBuilder, BlocListener, and BlocConsumer?",
+        hint: "Very commonly asked if BLoC is on your resume",
+        diff: "medium", freq: "hot",
+        answer: "BlocBuilder rebuilds UI when state changes. BlocListener reacts to state changes with side effects (navigation, snackbars) without rebuilding. BlocConsumer combines both — rebuilds UI AND handles side effects.",
+        code: `// BlocBuilder — UI only
+BlocBuilder<BookingBloc, BookingState>(
+  builder: (ctx, state) => state is LoadingState
+    ? CircularProgressIndicator()
+    : BookingList(state.bookings),
+)
+
+// BlocListener — side effects only
+BlocListener<BookingBloc, BookingState>(
+  listener: (ctx, state) {
+    if (state is ErrorState)
+      ScaffoldMessenger.of(ctx).showSnackBar(...);
+    if (state is SuccessState)
+      Navigator.pop(ctx);
+  },
+)
+
+// BlocConsumer — both
+BlocConsumer<BookingBloc, BookingState>(
+  listener: (ctx, state) { /* side effects */ },
+  builder: (ctx, state) => /* UI */,
+)`,
+        highlight: "Rule: If you only need to update UI — BlocBuilder. If you only need navigation/snackbars — BlocListener. If you need both — BlocConsumer.",
+        yourExp: "In your POS booking submission — BlocConsumer handles both showing the loading UI and navigating to success screen on completion.",
+        trap: "Never do navigation inside BlocBuilder. Navigation is a side effect — it belongs in BlocListener."
+      },
+      {
+        q: "What is the Repository Pattern and why do you use it?",
+        hint: "Architecture question — you use this, own the answer",
+        diff: "medium", freq: "hot",
+        answer: "The Repository Pattern is an abstraction layer between data sources (API, local DB) and business logic. The ViewModel/BLoC never knows if data comes from network or cache — it just calls the repository. This makes the code testable and the data source swappable.",
+        code: `// Abstract repository
+abstract class BookingRepository {
+  Future<List<Booking>> getBookings();
+}
+
+// Implementation — decides network vs cache
+class BookingRepositoryImpl implements BookingRepository {
+  final BookingRemoteSource remote;
+  final BookingLocalSource local;
+
+  @override
+  Future<List<Booking>> getBookings() async {
+    try {
+      final data = await remote.fetchBookings();
+      await local.saveBookings(data);  // cache
+      return data;
+    } catch (_) {
+      return local.getBookings();  // fallback to cache
+    }
+  }
+}`,
+        highlight: "Say: 'Repository is the single source of truth. It decides whether to hit the network or return cached data. The ViewModel never knows which one happened.'",
+        yourExp: "In your POS app — BookingRepository abstracts .NET API calls via Retrofit. On network failure it returns Hive cached data. This is your offline-resilient UX.",
+        trap: "Don't confuse Repository with Data Source. DataSource = where data physically comes from (API/DB). Repository = decides which DataSource to use and when."
+      },
+    ]
+  },
+  {
+    cat: "Architecture",
+    icon: "⬢",
+    iconBg: "rgba(242,169,110,0.12)",
+    iconColor: "#f2a96e",
+    desc: "Clean Architecture, MVVM, patterns — your strongest selling point",
+    questions: [
+      {
+        q: "Explain Clean Architecture in Flutter.",
+        hint: "You use this — must explain all 3 layers clearly",
+        diff: "hard", freq: "hot",
+        answer: "Clean Architecture divides code into 3 layers with one rule: dependencies only point inward. Presentation (UI, ViewModels) depends on Domain. Data (APIs, local DB) depends on Domain. Domain (entities, use cases, repository interfaces) depends on nothing.",
+        code: `lib/
+├── domain/           // No Flutter imports — pure Dart
+│   ├── entities/     // Core business objects
+│   │   └── booking.dart
+│   ├── repositories/ // Abstract interfaces only
+│   │   └── booking_repository.dart
+│   └── usecases/     // Single responsibility actions
+│       └── get_bookings.dart
+│
+├── data/             // Implements domain interfaces
+│   ├── models/       // JSON parsing, API models
+│   ├── sources/      // API calls, local DB
+│   └── repositories/ // Concrete implementations
+│
+└── presentation/     // Flutter UI
+    ├── screens/
+    ├── widgets/
+    └── viewmodels/`,
+        highlight: "Key rule to memorize: 'The dependency rule — source code dependencies always point inward toward higher-level policy.' Domain never imports from data or presentation.",
+        yourExp: "Your POS app uses Clean Architecture. When you needed to switch from one API endpoint to another, only the data layer changed. Domain and presentation were untouched.",
+        trap: "Don't say 'I use Clean Architecture because it's best practice.' Say 'I use it because it makes each layer independently testable and the data source swappable.'"
+      },
+      {
+        q: "What is Dependency Injection and why do you use GetIt?",
+        hint: "You use GetIt — own this answer completely",
+        diff: "medium", freq: "hot",
+        answer: "Dependency Injection means classes receive their dependencies from outside rather than creating them internally. GetIt is a service locator that stores and provides instances globally. It makes classes independently testable since you can inject mock dependencies in tests.",
+        code: `// Without DI — tightly coupled, untestable
+class BookingViewModel {
+  final repo = BookingRepositoryImpl(); // hardcoded
+}
+
+// With GetIt — loosely coupled, testable
+final sl = GetIt.instance;
+
+// Register once at app startup
+sl.registerLazySingleton<BookingRepository>(
+  () => BookingRepositoryImpl(sl(), sl())
+);
+
+// Use anywhere
+class BookingViewModel {
+  final repo = sl<BookingRepository>(); // injected
+}
+
+// In tests — register mock instead
+sl.registerSingleton<BookingRepository>(MockBookingRepo());`,
+        highlight: "Say: 'GetIt acts as a service locator. I register dependencies once at startup and inject them wherever needed. This decouples creation from usage.'",
+        yourExp: "In your POS app — GetIt registers BookingRepository, ApiClient, HiveStorage at startup. ViewModels receive them via sl<>() without knowing implementation details.",
+        trap: "GetIt is a service locator, not true DI. True DI injects via constructor. Service locator is pulled. Both are valid — just know the difference if asked."
+      },
+    ]
+  },
+  {
+    cat: "Performance",
+    icon: "⚡",
+    iconBg: "rgba(78,202,139,0.12)",
+    iconColor: "#4eca8b",
+    desc: "ANR, jank, memory — separates good devs from great ones",
+    questions: [
+      {
+        q: "How do you optimize a Flutter app's performance?",
+        hint: "Open-ended — structure your answer clearly",
+        diff: "medium", freq: "hot",
+        answer: "Performance optimization in Flutter covers: build optimization (reduce unnecessary rebuilds), list optimization (lazy building), image optimization (caching and sizing), async optimization (compute for heavy tasks), and memory optimization (disposing resources).",
+        code: `// 1. Reduce rebuilds — const, selector
+const Text('Static label')  // never rebuilds
+context.select<VM, int>((vm) => vm.count)  // targeted
+
+// 2. List performance
+ListView.builder(  // lazy — only builds visible items
+  itemBuilder: (ctx, i) => ItemCard(items[i]),
+)
+
+// 3. Image optimization
+CachedNetworkImage(  // cache-first, resize on device
+  imageUrl: url,
+  memCacheWidth: 200,
+)
+
+// 4. Heavy computation off main thread
+final parsed = await compute(parseResponse, jsonStr);
+
+// 5. Dispose everything
+@override
+void dispose() {
+  controller.dispose();
+  subscription.cancel();
+  super.dispose();
+}`,
+        highlight: "Structure your answer: 'I optimize at 4 levels — rebuild optimization, list optimization, asset optimization, and memory management.'",
+        yourExp: "In your POS app with 20k daily bookings — you use ListView.builder for booking lists, compute() for large JSON parsing, and CachedNetworkImage for tracking thumbnails.",
+        trap: "Don't just say 'I use const everywhere.' Show you understand WHY — const prevents widget from being recreated in the widget tree."
+      },
+      {
+        q: "What causes ANR in a Flutter app and how do you fix it?",
+        hint: "Android-specific — important since you target Android",
+        diff: "medium", freq: "warm",
+        answer: "ANR (Application Not Responding) occurs when the main thread is blocked for more than 5 seconds. In Flutter, the Dart main thread running heavy synchronous computation blocks the UI. Fix by moving heavy work to compute() or Isolates.",
+        code: `// CAUSES ANR — synchronous heavy work on main thread
+List<Booking> parseBookings(String json) {
+  // 50ms of JSON parsing blocks UI
+  return jsonDecode(json).map(...).toList();
+}
+
+// FIX — offload to compute()
+List<Booking> parseBookings(String json) { /* same */ }
+
+// Call from UI
+final bookings = await compute(parseBookings, jsonStr);
+// Main thread is free — no ANR`,
+        highlight: "Say: 'ANR happens when the Dart event loop is blocked. I identify these with Flutter DevTools CPU profiler and move blocking work to compute() or Isolates.'",
+        yourExp: "In your POS app — processing 20k booking records from API response was causing jank. You moved JSON parsing to compute() which eliminated the freeze.",
+        trap: "Don't confuse ANR with jank. Jank = frames dropping below 60fps (16ms budget). ANR = complete UI freeze for 5+ seconds. Different thresholds, different fixes."
+      },
+      {
+        q: "What is a memory leak in Flutter and how do you prevent it?",
+        hint: "Senior question — most devs don't think about this",
+        diff: "hard", freq: "warm",
+        answer: "A memory leak occurs when objects that are no longer needed are still referenced and cannot be garbage collected. In Flutter the most common causes are: StreamSubscriptions not cancelled, AnimationControllers not disposed, and async callbacks referencing disposed widgets.",
+        code: `class _BookingState extends State<BookingScreen> {
+  late StreamSubscription _sub;
+  late AnimationController _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _sub = trackingStream.listen((data) {
+      // LEAK if not cancelled — stream keeps widget alive
+      if (mounted) setState(() => tracking = data);
+    });
+    _anim = AnimationController(vsync: this, ...);
+  }
+
+  @override
+  void dispose() {
+    _sub.cancel();      // MUST cancel stream
+    _anim.dispose();    // MUST dispose controller
+    super.dispose();
+  }
+}`,
+        highlight: "Rule: If you created it in initState — dispose it in dispose(). Every StreamSubscription, AnimationController, TextEditingController, FocusNode must be disposed.",
+        yourExp: "In your POS real-time tracking screen — the location stream subscription is cancelled in dispose() to prevent the widget from being kept alive after navigation.",
+        trap: "Always check mounted before calling setState() in async callbacks. The widget may have been disposed while the async operation was running."
+      },
+    ]
+  },
+  {
+    cat: "Navigation",
+    icon: "→",
+    iconBg: "rgba(93,220,176,0.12)",
+    iconColor: "#5ddcb0",
+    desc: "go_router, Navigator — routing questions",
+    questions: [
+      {
+        q: "What is the difference between Navigator 1.0 and Navigator 2.0?",
+        hint: "Context question — shows you understand evolution",
+        diff: "medium", freq: "warm",
+        answer: "Navigator 1.0 is imperative — you push and pop routes manually. Navigator 2.0 is declarative — the route stack is derived from app state. Nav 2.0 supports deep linking and back button handling properly but is complex to implement directly — which is why packages like go_router exist.",
+        code: `// Navigator 1.0 — imperative, simple
+Navigator.of(context).push(
+  MaterialPageRoute(builder: (_) => BookingScreen())
+);
+
+// go_router — declarative Navigator 2.0 wrapper
+GoRouter(
+  routes: [
+    GoRoute(path: '/', builder: (_, __) => HomeScreen()),
+    GoRoute(path: '/booking/:id',
+      builder: (_, state) => BookingScreen(
+        id: state.pathParameters['id']!
+      )
+    ),
+  ]
+)
+
+// Navigate
+context.go('/booking/330326004456');`,
+        highlight: "Say: 'I use go_router which abstracts Navigator 2.0. It handles deep linking, route guards, and nested navigation cleanly.'",
+        yourExp: "Your POS app uses go_router for navigation between dashboard, booking, tracking, and search screens with route parameters for CNote IDs.",
+        trap: "Navigator 2.0 is not strictly better — for simple apps Navigator 1.0 is fine. The complexity of Nav 2.0 is only justified when you need deep linking or URL-based routing."
+      },
+    ]
+  },
+  {
+    cat: "Testing",
+    icon: "✓",
+    iconBg: "rgba(224,96,96,0.12)",
+    iconColor: "#e06060",
+    desc: "Your growth area — interviewers probe this",
+    questions: [
+      {
+        q: "What are the three types of testing in Flutter?",
+        hint: "Foundation question — must know all three",
+        diff: "easy", freq: "hot",
+        answer: "Unit tests test a single function or class in isolation — fast, no Flutter needed. Widget tests test a single widget in isolation using a test environment — medium speed. Integration tests test the full app flow on a real device or emulator — slow but most realistic.",
+        code: `// Unit test — no Flutter, pure Dart
+test('calculates total correctly', () {
+  final calc = FreightCalculator();
+  expect(calc.total(freight: 100, gst: 0.18), 118.0);
+});
+
+// Widget test — isolated widget
+testWidgets('shows loading state', (tester) async {
+  await tester.pumpWidget(BookingCard(isLoading: true));
+  expect(find.byType(CircularProgressIndicator), findsOne);
+});
+
+// Integration test — full app
+testWidgets('booking flow', (tester) async {
+  app.main();
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('New Booking'));
+  await tester.pumpAndSettle();
+  expect(find.text('Booking Screen'), findsOne);
+});`,
+        highlight: "Testing pyramid: Many unit tests (fast, cheap) → Some widget tests (medium) → Few integration tests (slow, expensive). Invert this pyramid and your CI pipeline becomes painfully slow.",
+        yourExp: "In your POS app — unit tests for freight calculation logic (GST, valuation charge). Widget tests for booking form validation. Integration tests for the full booking flow.",
+        trap: "Don't say 'I don't write tests in production.' Say 'I write unit tests for business logic and widget tests for critical UI components. Integration tests for key flows.'"
+      },
+      {
+        q: "How do you test a class that has dependencies?",
+        hint: "Shows you understand mocking — practical question",
+        diff: "medium", freq: "warm",
+        answer: "You use mocking — replace real dependencies with fake ones that you control. Mocktail or Mockito packages create mock objects. You define what the mock returns, run the code under test, and verify the output without touching real APIs or databases.",
+        code: `// The class to test
+class BookingViewModel {
+  final BookingRepository repo;
+  BookingViewModel(this.repo);
+  
+  Future<void> loadBookings() async {
+    final data = await repo.getBookings();
+    // process data...
+  }
+}
+
+// Mock the dependency
+class MockBookingRepo extends Mock implements BookingRepository {}
+
+// Test
+test('loads bookings on init', () async {
+  final mock = MockBookingRepo();
+  
+  when(() => mock.getBookings())
+    .thenAnswer((_) async => [Booking(id: '123')]);
+  
+  final vm = BookingViewModel(mock);
+  await vm.loadBookings();
+  
+  verify(() => mock.getBookings()).called(1);
+  expect(vm.bookings.length, 1);
+});`,
+        highlight: "Say: 'I use Mocktail for mocking because it works with null safety cleanly. I mock at the repository boundary so my ViewModel tests are pure business logic tests.'",
+        yourExp: "In your POS app — you can mock the BookingRepository to test ViewModel logic without hitting the actual .NET API.",
+        trap: "Don't mock things you don't own — don't mock third-party libraries directly. Wrap them in your own abstractions and mock those instead."
+      },
+    ]
+  },
+  {
+    cat: "Your POS Project",
+    icon: "★",
+    iconBg: "rgba(242,169,110,0.15)",
+    iconColor: "#f2a96e",
+    desc: "Questions they will specifically ask about your resume project",
+    questions: [
+      {
+        q: "Walk me through the architecture of your POS system.",
+        hint: "They WILL ask this — practice this answer most",
+        diff: "medium", freq: "hot",
+        answer: "Structure your answer in 3 parts: layers, data flow, and a specific challenge you solved.",
+        code: `// Your answer structure:
+
+// 1. LAYERS
+"I used Clean Architecture with 3 layers:
+ - Presentation: Flutter screens + Provider ViewModels
+ - Domain: Use cases, repository interfaces, entities
+ - Data: .NET REST API via Retrofit, Hive for local cache"
+
+// 2. DATA FLOW  
+"A booking request flows:
+ UI → ViewModel → UseCase → Repository →
+ RemoteDataSource (API) → back up the chain"
+
+// 3. CHALLENGE
+"The challenge was offline resilience — 
+ if the .NET API was down, the app needed to show
+ cached bookings. The Repository checks network first,
+ on failure returns Hive cached data transparently.
+ The ViewModel never knows which happened."`,
+        highlight: "Lead with the business problem, then the technical solution. Don't just list technologies — explain WHY you chose each one.",
+        yourExp: "This IS your experience. Practice saying this out loud 5 times before your interview.",
+        trap: "Don't get lost in implementation details. Give the overview first, then offer to go deeper: 'Want me to go deeper into any specific layer?'"
+      },
+      {
+        q: "How did you handle offline support in your POS app?",
+        hint: "You built this — specific and memorable answer",
+        diff: "medium", freq: "hot",
+        answer: "Offline support uses a cache-first or network-first strategy in the Repository. For booking lists — network first with Hive fallback. For booking submission — queue locally and sync when online.",
+        code: `// Network-first with Hive fallback
+@override
+Future<List<Booking>> getBookings() async {
+  try {
+    // Try network first
+    final data = await remoteSource.fetchBookings();
+    // Cache on success
+    await localSource.saveBookings(data);
+    return data;
+  } catch (e) {
+    // Network failed — return cached data
+    return localSource.getBookings();
+  }
+}
+
+// Connectivity check
+final result = await Connectivity().checkConnectivity();
+if (result == ConnectivityResult.none) {
+  // Show offline indicator in UI
+}`,
+        highlight: "This is your strongest differentiator. Most devs at your level haven't implemented proper offline support. Own this answer confidently.",
+        yourExp: "Your POS app processes 20k bookings daily — in a logistics environment where network can drop. This offline resilience is a real production requirement you solved.",
+        trap: "Don't say 'the app just shows an error when offline.' Show you thought about UX — cached data with an offline indicator is professional-grade thinking."
+      },
+      {
+        q: "How did you handle the thermal printer integration?",
+        hint: "Unique to your project — they will be curious",
+        diff: "hard", freq: "warm",
+        answer: "Thermal printer integration in Flutter uses Platform Channels to communicate with native Android printing APIs or ESC/POS protocol directly via Bluetooth/USB.",
+        code: `// Platform Channel approach
+const channel = MethodChannel('pos_printer');
+
+Future<void> printConsignment(Booking booking) async {
+  final receipt = buildReceiptData(booking);
+  
+  try {
+    await channel.invokeMethod('printReceipt', {
+      'data': receipt,
+      'printerAddress': selectedPrinter,
+    });
+  } on PlatformException catch (e) {
+    // Handle printer error
+  }
+}
+
+// Receipt data includes:
+// - CNote: 330326004456
+// - Sender/Receiver details
+// - Weight, charges breakdown
+// - GST amount
+// - Transit mode`,
+        highlight: "This is a genuine differentiator. Very few Flutter devs have hardware integration experience. Lead with: 'I integrated POS thermal printers using Platform Channels to bridge Flutter with native Android printing APIs.'",
+        yourExp: "This is completely your experience — own it. The interviewer likely hasn't done this and will be genuinely impressed.",
+        trap: "If they ask which specific package or approach — be honest about exactly what you used. Never exaggerate hardware experience — it's easily caught in technical rounds."
+      },
+      {
+        q: "Your app processes 20,000 bookings daily. How do you handle performance at that scale?",
+        hint: "Scale question — they want to hear your thinking",
+        diff: "hard", freq: "hot",
+        answer: "Performance at scale requires: lazy loading in the list, pagination from API, local caching to reduce API calls, background processing for heavy JSON parsing, and optimized rebuilds.",
+        code: `// 1. Paginated API — never load all 20k at once
+Future<BookingPage> getBookings({int page = 1}) async {
+  return api.getBookings(page: page, limit: 50);
+}
+
+// 2. ListView.builder — lazy rendering
+ListView.builder(
+  itemCount: bookings.length,
+  itemBuilder: (ctx, i) {
+    // Load next page when near end
+    if (i == bookings.length - 5) loadNextPage();
+    return BookingCard(bookings[i]);
+  }
+)
+
+// 3. Heavy parsing off main thread
+final bookings = await compute(
+  parseBookingList, 
+  jsonResponse
+);
+
+// 4. Selective rebuilds
+context.select<BookingVM, int>((vm) => vm.totalCount)`,
+        highlight: "Structure: 'I handle scale at 3 levels — API level (pagination), list level (lazy builder), and processing level (compute for JSON parsing).'",
+        yourExp: "This is your actual production system. Speak with confidence — you've solved real scale problems that most interview candidates have never faced.",
+        trap: "Don't claim you load all 20k records at once. Even if you do currently, say 'We use pagination — loading 50 records per page and fetching more as the user scrolls.'"
+      },
+    ]
+  },
+];
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+
+let currentFilter = 'all';
+let searchQuery = '';
+const answered = new Set(JSON.parse(localStorage.getItem('answered') || '[]'));
+
+function saveAnswered() {
+  localStorage.setItem('answered', JSON.stringify([...answered]));
+}
+
+function totalQ() { return QS.reduce((s, c) => s + c.questions.length, 0); }
+function hotQ()   { return QS.reduce((s, c) => s + c.questions.filter(q => q.freq === 'hot').length, 0); }
+
+function updateProgress() {
+  const total = totalQ();
+  const done  = answered.size;
+  const pct   = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent  = pct + '%';
+  document.getElementById('score-num').textContent  = done;
+  document.getElementById('score-label').textContent = ' / ' + total;
+  document.getElementById('score-fill').style.width = pct + '%';
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = QS.map(c =>
+    `<div class="cat-label">${c.cat}</div>
+     <div class="nav-item" onclick="scrollTo('cat-${c.cat.replace(/\s/g,'')}')">${c.icon} ${c.cat} <span style="margin-left:auto;font-size:10px;color:var(--text3)">${c.questions.length}</span></div>`
+  ).join('');
+}
+
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function toggleQ(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function markDone(id, btn, event) {
+  event.stopPropagation();
+  const card = document.getElementById('card-' + id);
+  if (answered.has(id)) {
+    answered.delete(id);
+    btn.classList.remove('done');
+    btn.textContent = '';
+    card.classList.remove('answered');
+  } else {
+    answered.add(id);
+    btn.classList.add('done');
+    btn.textContent = '✓';
+    card.classList.add('answered');
+  }
+  saveAnswered();
+  updateProgress();
+}
+
+function filterDiff(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderContent();
+}
+
+function handleSearch(val) {
+  searchQuery = val.toLowerCase();
+  renderContent();
+}
+
+function renderContent() {
+  const content = document.getElementById('content');
+  const noRes   = document.getElementById('no-results');
+  let html = '';
+  let anyVisible = false;
+
+  QS.forEach(cat => {
+    const filtered = cat.questions.filter((q, qi) => {
+      const id = `${cat.cat}-${qi}`;
+      if (currentFilter === 'easy'      && q.diff !== 'easy')       return false;
+      if (currentFilter === 'medium'    && q.diff !== 'medium')     return false;
+      if (currentFilter === 'hard'      && q.diff !== 'hard')       return false;
+      if (currentFilter === 'hot'       && q.freq !== 'hot')        return false;
+      if (currentFilter === 'unanswered' && answered.has(id))       return false;
+      if (searchQuery && !q.q.toLowerCase().includes(searchQuery) &&
+          !(q.answer||'').toLowerCase().includes(searchQuery))      return false;
+      return true;
+    });
+
+    if (!filtered.length) return;
+    anyVisible = true;
+
+    html += `
+      <div class="cat-header" id="cat-${cat.cat.replace(/\s/g,'')}">
+        <div class="cat-icon" style="background:${cat.iconBg};color:${cat.iconColor}">${cat.icon}</div>
+        <div class="cat-info">
+          <h2>${cat.cat}</h2>
+          <p>${cat.desc}</p>
+        </div>
+      </div>`;
+
+    filtered.forEach((q, fi) => {
+      const origIdx = cat.questions.indexOf(q);
+      const id = `${cat.cat}-${origIdx}`;
+      const isDone = answered.has(id);
+
+      html += `
+        <div class="q-card ${isDone ? 'answered' : ''}" id="card-${id}">
+          <div class="q-head" onclick="toggleQ('${id}')">
+            <span class="q-num">${String(fi+1).padStart(2,'0')}</span>
+            <div class="q-text">
+              ${q.q}
+              ${q.hint ? `<small>${q.hint}</small>` : ''}
+            </div>
+            <div class="q-right">
+              <span class="diff diff-${q.diff}">${q.diff}</span>
+              ${q.freq ? `<span class="freq freq-${q.freq}">${q.freq === 'hot' ? '🔥' : '●'}</span>` : ''}
+              <button class="check-btn ${isDone ? 'done' : ''}" id="chk-${id}"
+                onclick="markDone('${id}', this, event)">${isDone ? '✓' : ''}</button>
+              <span class="chevron" id="chev-${id}">▶</span>
+            </div>
+          </div>
+          <div class="q-body" id="body-${id}">
+            <div class="answer-wrap">
+              <div class="answer-section">
+                <div class="ans-label">Answer</div>
+                <div class="ans-text">${q.answer}</div>
+              </div>
+              ${q.code ? `
+              <div class="answer-section">
+                <div class="ans-label">Code Example</div>
+                <div class="code-block">${q.code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+              </div>` : ''}
+              ${q.highlight ? `<div class="highlight">💡 ${q.highlight}</div>` : ''}
+              ${q.yourExp ? `<div class="your-exp">🚀 Your Experience: ${q.yourExp}</div>` : ''}
+              ${q.trap ? `<div class="trap">⚠️ Common Trap: ${q.trap}</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    });
+  });
+
+  content.innerHTML = html;
+  noRes.style.display = anyVisible ? 'none' : 'block';
+  updateProgress();
+}
+
+// INIT
+document.getElementById('stat-total').textContent = totalQ();
+document.getElementById('stat-hot').textContent   = hotQ();
+document.getElementById('stat-cats').textContent  = QS.length;
+document.getElementById('score-label').textContent = ' / ' + totalQ();
+
+renderNav();
+renderContent();
+</script>
+</body>
+</html>
